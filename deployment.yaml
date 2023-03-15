@@ -1,0 +1,23 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:                                     #This is the metadata for the deployment file itself and in it    
+    name: django-todo-deployment              # we are mentioning the app label for service.yml file to recognize it
+    namespace: django-todo-app
+    labels: 
+      app: django-app
+spec:
+  replicas: 3                                 #Here in spec, we are mentioning our requirement of replicas
+  selector:                                   #This is Selector which will find the pods with django-app label, 
+    matchLabels:                              #If any pod goes down it will regenerate it
+      app: django-app
+  template:                                   #In template will specify Metadata for pod to be created and the
+    metadata:                                 #the proper label is given in it (For Selector and label to work)
+      labels: 
+        app: django-app
+    spec:
+      containers:
+        - name: django-todo-ctrl
+          image: trainwithshubham/django-todo:latest
+          ports:
+           - containerPort: 8081  
+      
