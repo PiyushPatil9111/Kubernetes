@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: django-todo-ingress
+  namespace: django-todo-app
+spec: 
+  rules:
+    - host: "www.piyushdevops.com"
+      http:
+        paths:
+         - pathType: Prefix
+           path: "/"
+           backend:
+            service:
+              name: django-todo-service
+              port:
+                number: 80
+
+  
