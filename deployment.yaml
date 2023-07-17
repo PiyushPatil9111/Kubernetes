@@ -5,6 +5,7 @@ metadata:                                     #This is the metadata for the depl
     namespace: django-todo-app
     labels: 
       app: django-app
+      env: prod
 spec:
   replicas: 3                                 #Here in spec, we are mentioning our requirement of replicas
   selector:                                   #This is Selector which will find the pods with django-app label, 

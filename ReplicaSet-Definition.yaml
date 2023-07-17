@@ -1,0 +1,27 @@
+#The Replicaset is an upgraded version of ReplicaContoller, Replicaset has an aded option of Selectors
+#which allows it to take the existing pods with the matching label under itself, hence if we alrady have
+#2 pods with the label type: prod-frontend then the Replicaset will only create one new pod to reach the 
+#replica capacity of 3.
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaSet
+  labels:
+    name: myapp
+    type: prod-frontend
+spec:
+  template:
+    metadata:
+      name: myapp-replicaSet
+      labels:
+        app: myapp
+        type: prod-frontend
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      type: prod-frontend
