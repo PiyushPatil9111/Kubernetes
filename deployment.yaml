@@ -20,5 +20,14 @@ spec:
         - name: django-todo-ctrl
           image: trainwithshubham/django-todo:latest
           ports:
-           - containerPort: 8081  
+           - containerPort: 8081
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: color
+                operator: In
+                values:
+                - blue
       
