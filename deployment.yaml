@@ -21,8 +21,8 @@ spec:
           image: trainwithshubham/django-todo:latest
           ports:
            - containerPort: 8081
-      affinity:
-        nodeAffinity:
+      affinity:                                               # We are using affinity to schedule pods on as specific node with the mentioned node labels and the condition 
+        nodeAffinity:                                         
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
