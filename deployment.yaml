@@ -21,6 +21,13 @@ spec:
           image: trainwithshubham/django-todo:latest
           ports:
            - containerPort: 8081
+          resources:                           #Here we specify basic resource requirement and max limit for the pods
+            requests:
+              memory: "1Gi"
+              cpu: 1
+            limits:
+              memory: "2Gi"
+              cpu: 2          
       affinity:                                               # We are using affinity to schedule pods on as specific node with the mentioned node labels and the condition 
         nodeAffinity:                                         
           requiredDuringSchedulingIgnoredDuringExecution:

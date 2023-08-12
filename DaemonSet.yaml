@@ -1,0 +1,24 @@
+#Daemon Sets are like replica sets just they make sure a replica of the pod is automatically deployed
+#on all existing and newly created Nodes. Useful for monitoering solutions, so that we dont have to 
+#deploy monitoring agent on every new node separately and its auto created.
+
+apiVersion: app/v1
+kind: DaemonSet
+metadata: 
+  name: DaemonSet
+  labels:
+    app: monitoring
+spec: 
+  selector:
+    matchLabels: 
+      env: prod
+  template:
+    metadata:
+      labels: 
+        env: prod
+    spec: 
+      containers:
+        - name: cloudwatch_Agent
+          image: amazon/cloudwatch-agent     
+
+
