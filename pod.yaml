@@ -7,6 +7,7 @@ spec:
     containers:
     - name: django-todo-ctrl
       image: trainwitshubham/todo-app
+      command: ["mkdir impAppFiles"]     #this is for adding a command to the pod file
       ports:
         - containerPort: 8001
          

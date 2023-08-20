@@ -19,6 +19,7 @@ spec:
       containers:
         - name: django-todo-ctrl
           image: trainwithshubham/django-todo:latest
+          command: ["mkdir impAppFiles"]
           ports:
            - containerPort: 8081
           resources:                           #Here we specify basic resource requirement and max limit for the pods
