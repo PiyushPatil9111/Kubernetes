@@ -1,0 +1,24 @@
+kind: Pod
+metadata:
+  creationTimestamp: "2023-09-04T15:34:07Z"
+  labels:
+    name: webapp-color
+  name: webapp-color
+  namespace: default
+  resourceVersion: "882"
+  uid: 489d7824-6240-44ea-9784-0accdc9f8b4c
+spec:
+  containers:
+  - env:
+     - name: APP_COLOR
+       valueFrom:
+        configMapKeyRef:
+          name: webapp-config-map
+          key: APP_COLOR                                                            
+    image: kodekloud/webapp-color
+    imagePullPolicy: Always
+    name: webapp-color
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    

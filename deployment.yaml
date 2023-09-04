@@ -20,6 +20,9 @@ spec:
         - name: django-todo-ctrl
           image: trainwithshubham/django-todo:latest
           command: ["mkdir impAppFiles"]
+          envFrom:                             #Here we specify Environment variables by referencing the config map
+            - configMapRef:
+                name: appdata_config
           ports:
            - containerPort: 8081
           resources:                           #Here we specify basic resource requirement and max limit for the pods
@@ -29,7 +32,7 @@ spec:
             limits:
               memory: "2Gi"
               cpu: 2          
-      affinity:                                               # We are using affinity to schedule pods on as specific node with the mentioned node labels and the condition 
+      affinity:                                # We are using affinity to schedule pods on as specific node with the mentioned node labels and the condition 
         nodeAffinity:                                         
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
