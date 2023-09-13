@@ -16,6 +16,12 @@ spec:
       labels: 
         app: django-app
     spec:
+      initContainers:                         #THis init container sleeps fr 600 sec (which here represents some command)
+        - name: mySleeperInit                 #Once 600 sleep is complete it means its fuction is done it will get deleted
+          image: nginx                        #And then the main container will be created
+          command:
+            - "sleep"
+            - "600"
       containers:
         - name: django-todo-ctrl
           image: trainwithshubham/django-todo:latest
