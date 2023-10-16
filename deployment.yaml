@@ -33,8 +33,8 @@ spec:
            - containerPort: 8081
           resources:                           #Here we specify basic resource requirement and max limit for the pods
             requests:
-              memory: "1Gi"
-              cpu: 1
+              memory: "0.5Gi"
+              cpu: 0.5
             limits:
               memory: "2Gi"
               cpu: 2          
@@ -48,3 +48,62 @@ spec:
                 values:
                 - blue
       
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pod
+  name: pod2
+  namespace: prod-namespace
+spec:
+  containers:
+  - image: httpd
+    name: pod2
+    env:                   #here we have given the name of variable and taking only value from configmap     
+      - name: db_h
+        valueFrom:
+          configMapKeyRef:
+            name: db-connection
+            key: db_h.txt
+      - name: db_p
+        valueFrom:
+          configMapKeyRef:
+            name: db-connection
+            key: db_p.txt
+    resources: 
+       limits:
+        memory: "1Gi"
+        cpu: "1"
+       requests:
+        memory: "0.5Gi"
+        cpu: "0.5"
+        
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pod
+  name: pod3
+  namespace: prod-namespace
+spec:
+  containers:
+  - image: httpd
+    name: pod3
+    resources: 
+       limits:
+        memory: "1Gi"
+        cpu: "1"
+       requests:
+        memory: "0.5Gi"
+        cpu: "0.5"
+        
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

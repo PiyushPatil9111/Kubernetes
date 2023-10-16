@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod-namespace
+  labels:
+    env: prod
+
+---              #The three hyphens separate the two resources in the same file, so when we apply 
+                 #THis file, it will create two resources one namespace and a ResourceQuota
+
+                 #We are applying the following resource quota for specified namespace prod-namespace
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mem-cpu-demo
+  namespace: prod-namespace
+spec:
+  hard:
+    pods: "4"
+    services: "4"
+    replicationcontrollers: "3"
+    count/deployments.apps: "2"
+    requests.cpu: "2"
+    requests.memory: 2Gi
+    limits.cpu: "3"
+    limits.memory: 3Gi

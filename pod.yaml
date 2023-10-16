@@ -3,11 +3,24 @@ kind: Pod
 metadata: 
     name: django-todo-pod
     namespace: django-todo-app
+    labels:
+      app: django-app
 spec:
     containers:
     - name: django-todo-ctrl
-      image: trainwitshubham/todo-app
-      command: ["mkdir impAppFiles"]     #this is for adding a command to the pod file
+      image: yadwindercloud/first-app:v1
+#      command: ["mkdir" "/" "impAppFiles"]     #this is for adding a command to the pod file
       ports:
-        - containerPort: 8001
+        - containerPort: 8080
+      env:                   #here we have given the name of variable and taking only value from configmap     
+      - name: db_h
+        valueFrom:
+          configMapKeyRef:
+            name: db-connection
+            key: db_h.txt
+      - name: db_p
+        valueFrom:
+          configMapKeyRef:
+            name: db-connection
+            key: db_p.txt
          

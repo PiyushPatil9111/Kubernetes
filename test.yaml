@@ -21,4 +21,33 @@ spec:
     resources: {}
     terminationMessagePath: /dev/termination-log
     terminationMessagePolicy: File
+
+
+
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod-with-secret
+spec:
+  containers:
+    - name: mycontainer
+      image: nginx
+      env:
+      - name: DB_CREDENTIALS
+        valueFrom:
+          secretKeyRef:
+            name: db-credentials
+            key: db-credentials
+      - name: DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: db-credentials
+            key: db-password
+      - name: DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: db-credentials
+            key: db-password
     

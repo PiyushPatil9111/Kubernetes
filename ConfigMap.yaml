@@ -10,3 +10,25 @@ data:
   user-interface.properties: |
     color.good= purple
     color.bad= yellow
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+    env:
+      - name: db_h
+        valueFrom:
+          configMapKeyRef:
+            name: db-connection
+            key: db_h.txt
+      - name: db_p
+        valueFrom:
+          configMapKeyRef:
+            name: db-connection
+            key: db_p.txt
+  restartPolicy: Always
