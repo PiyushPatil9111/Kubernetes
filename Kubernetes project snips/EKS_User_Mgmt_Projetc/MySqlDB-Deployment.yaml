@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      initContainers:              ## The init container will try connecting to DB, once its connected while loop will stop
+        - name: init-db            ## the init container task will get completed and then the app pod will get created
+          image: busybox:1.31
+          command: ['sh', '-c', 'echo -e "Checking for the availability of MySQL Server deployment"; while ! nc -z mysql 3306; do sleep 1; printf "-"; done; echo -e "  >> MySQL DB Server has started";']
+      containers:
+        - name: mysql
+          image: mysql:5.6
+          env: 
+           - name: MYSQL_ROOT_PASSWORD
+             valueFrom:
+                secretKeyRef:
+                  name: mysql-db-password
+                  key: db-password
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-persistent-storage
+            - mountPath: /docker-entrypoint-initdb.d
+              name: usermanagement-dbcreation-script
+#the ConfigMap named usermanagement-dbcreation-script contains SQL script fr creating DB, and it's mounted into the 
+# /docker-entrypoint-initdb.d directory inside the mysql container.              
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: ebs-mysql-pv-claim
+        - name: usermanagement-dbcreation-script
+          configMap:
+            name: usermanagement-dbcreation-script
+
+
+
+    
+  

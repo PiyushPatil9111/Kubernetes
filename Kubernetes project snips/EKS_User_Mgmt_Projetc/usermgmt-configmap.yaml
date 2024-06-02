@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: usermanagement-dbcreation-script
+data:
+  mysql_usermgmt.sql: |-
+    DROP DATABASE IF EXISTS usermgmt;
+    CREATE DATABASE usermgmt;
+# We are going to mount this configmap as volume on the SQL DB pod on path /docker-entrypoint-initdb.d, so that it 
+# utilizes the script to create the database once the pod is created
