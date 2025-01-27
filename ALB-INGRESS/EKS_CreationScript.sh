@@ -29,7 +29,7 @@ eksctl create nodegroup --cluster=my-eks-cluster \
                        --full-ecr-access \
                        --appmesh-access \
                        --alb-ingress-access \
-		       --node-private-networking
+                       --node-private-networking
 
 echo "Node group created "
 #creating New Security grp for eks cluster and allowing all ports and ips inbpund then attaching it to the cluster.
@@ -71,11 +71,15 @@ sed -i.bak -e '612,620d' ./v2_7_2_full.yaml
 sed -i.bak -e 's|your-cluster-name|my-eks-cluster|' ./v2_7_2_full.yaml
 
 kubectl apply -f v2_7_2_full.yaml
-echo "The ingress controller name is as follows:"
+echo "The ingress controller is as follows:"
 kubectl get deploy aws-load-balancer-controller -n kube-system
 
 echo "Creating Ingress Class"
 kubectl apply -f /d/Kubernetes/ALB-INGRESS/Ingress_class.yaml
 kubectl get ingressclass
+
+echo "creating the deployment and nodeport service for the nginx application"
+kubectl apply -f /d/Kubernetes/ALB-INGRESS/app_deployment.yaml
+kubectl apply -f /d/Kubernetes/ALB-INGRESS/app_nodeport_service.yaml
 
 echo "end of script"

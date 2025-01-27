@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-usermgmt-restapp-service
+  labels:
+    app: usermgmt-restapp
+  annotations:
+    # Ingress Core Settings  
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    # Health Check Settings
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP 
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    #Important Note:  Need to add health check path annotations in service level if we are planning to use multiple targets in a load balancer    
+    #alb.ingress.kubernetes.io/healthcheck-path: /usermgmt/health-status
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/success-codes: '200'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+    ## SSL Settings
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:180789647333:certificate/9f042b5d-86fd-4fad-96d0-c81c5abc71e1
+    #alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-1-2017-01 #Optional (Picks default if not used)    
+    # SSL Redirect Setting
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'   
+spec:
+  rules:
+    - host: ssldemo.kubeoncloud.com    # SSL Setting (Optional only if we are not using certificate-arn annotation)
+      http:
+        paths:
+          - path: /* # SSL Redirect Setting
+            pathType: Prefix
+            backend:
+              service:
+                name: ssl-redirect
+                port: 
+                  name: use-annotation   # Since we have added, ssl redirect annotation, it will use the value suggested by it as port.         
+          - path: /app1/*
+            pathType: Prefix
+            backend:
+              service:
+                name: app1-nginx-nodeport-service
+                port: 
+                  number: 80                        
+          - path: /app2/*
+            pathType: Prefix
+            backend:
+              service:
+                name: app2-nginx-nodeport-service
+                port:
+                  number: 80            
+          - path: /*
+            pathType: Prefix
+            backend:
+              service:
+                name: usermgmt-restapp-nodeport-service
+                port: 
+                  number: 8095 
