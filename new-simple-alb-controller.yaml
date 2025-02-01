@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alb-ingress-controller
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alb-ingress-controller
+  template:
+    metadata:
+      labels:
+        app: alb-ingress-controller
+    spec:
+      serviceAccountName: alb-ingress-controller
+      containers:
+        - name: alb-ingress-controller
+          image: docker.io/amazon/aws-alb-ingress-controller:v2.4.5
+          args:
+            - --ingress-class=alb
+            - --cluster-name=<your-cluster-name>
+          env:
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: aws-auth
+                  key: AWS_REGION
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: aws-auth
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: aws-auth
+                  key: AWS_SECRET_ACCESS_KEY
